@@ -25,11 +25,11 @@ let FieldValue = require('firebase-admin').firestore.FieldValue;
 // Initialize Algolia
 const ALGOLIA_ID = 'ELRRSHQHGD';
 const ALGOLIA_ADMIN_KEY = '6c843a93ee1af8a0b03034fa81edd647';
-const ALGOLIA_SEARCH_KEY = '680a915d8b1ce3c430b1412f34f89ec3';
+//  const ALGOLIA_SEARCH_KEY = '680a915d8b1ce3c430b1412f34f89ec3';
 
 const ALGOLIA_INDEX_NAME = 'titles';
 const admin_client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY);
-const search_client = algoliasearch(ALGOLIA_ID, ALGOLIA_SEARCH_KEY);
+//const search_client = algoliasearch(ALGOLIA_ID, ALGOLIA_SEARCH_KEY);
 
 /////////////////////////////// Routes to APIs //////////////////////////////////////////
 
@@ -119,7 +119,9 @@ app.post('/getLatest', (req, res) => {
                 } else {
                     let data = [];
                     snapshot.forEach(doc => {
-                        data.push(doc.data());
+                        let content = doc.data();
+                        content['media_id']= doc.id;
+                        data.push(content);
                     });
                     res.status(HttpStatus.OK).send({success: true, data: data});
                 }
@@ -139,7 +141,9 @@ app.post('/getLatest', (req, res) => {
                     } else {
                         let data = [];
                         snapshot.forEach(doc => {
-                            data.push(doc.data());
+                            let content = doc.data();
+                            content['media_id']= doc.id;
+                            data.push(content);
                         });
                         res.status(HttpStatus.OK).send({success: true, data: data});
                     }
@@ -159,7 +163,9 @@ app.post('/getLatest', (req, res) => {
                     } else {
                         let data = [];
                         snapshot.forEach(doc => {
-                            data.push(doc.data());
+                            let content = doc.data();
+                            content['media_id']= doc.id;
+                            data.push(content);
                         });
                         res.status(HttpStatus.OK).send({success: true, data: data});
                     }
@@ -174,26 +180,26 @@ app.post('/getLatest', (req, res) => {
 });
 
 
-app.post('/search', (req, res) => {
-    var title = req.body.title;
-    if (!title) {
-        res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
-        return;
-    }
-
-    //search in algolia index
-    var index = search_client.initIndex('titles');
-    index.search(title).then(result => {
-        console.log(result.hits);
-        if (result.hits.length > 0) res.status(HttpStatus.OK).send({success: true, data: result.hits});
-        else res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
-        return;
-    }).catch(err => {
-        console.log(err);
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
-    });
-
-});
+// app.post('/search', (req, res) => {
+//     var title = req.body.title;
+//     if (!title) {
+//         res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+//         return;
+//     }
+//
+//     //search in algolia index
+//     var index = search_client.initIndex('titles');
+//     index.search(title).then(result => {
+//         console.log(result.hits);
+//         if (result.hits.length > 0) res.status(HttpStatus.OK).send({success: true, data: result.hits});
+//         else res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
+//         return;
+//     }).catch(err => {
+//         console.log(err);
+//         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+//     });
+//
+// });
 
 
 var FAIL = {
