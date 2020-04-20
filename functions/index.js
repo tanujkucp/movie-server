@@ -2,11 +2,14 @@ const functions = require('firebase-functions');
 const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
-var HttpStatus = require('http-status-codes');
-var serviceAccount = require("./../movies-9eb90-firebase-adminsdk-8xp8n-33f3f8a665.json");
+const HttpStatus = require('http-status-codes');
+const serviceAccount = require("./../movies-9eb90-firebase-adminsdk-8xp8n-33f3f8a665.json");
 const algoliasearch = require('algoliasearch');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 let Templates = require('./templates');
+let Configs = require('./Configs');
 
 ////////////////////////////// initialize services //////////////////////////////////////
 
@@ -16,22 +19,128 @@ app.use(cors({origin: true}));
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://movies-9eb90.firebaseio.com"
+    databaseURL: Configs.databaseURL
 });
 const db = admin.firestore();
-
-let FieldValue = require('firebase-admin').firestore.FieldValue;
+let FieldValue = admin.firestore.FieldValue;
 
 // Initialize Algolia
-const ALGOLIA_ID = 'ELRRSHQHGD';
-const ALGOLIA_ADMIN_KEY = '6c843a93ee1af8a0b03034fa81edd647';
-//  const ALGOLIA_SEARCH_KEY = '680a915d8b1ce3c430b1412f34f89ec3';
-
-const ALGOLIA_INDEX_NAME = 'titles';
-const admin_client = algoliasearch(ALGOLIA_ID, ALGOLIA_ADMIN_KEY);
+const admin_client = algoliasearch(Configs.ALGOLIA_ID, Configs.ALGOLIA_ADMIN_KEY);
 //const search_client = algoliasearch(ALGOLIA_ID, ALGOLIA_SEARCH_KEY);
 
+const saltRounds = 8;
+
 /////////////////////////////// Routes to APIs //////////////////////////////////////////
+
+
+app.post('/createAdminAccount', (req, res) => {
+    var secret_key = req.body.secret_key;
+    var username = req.body.username;
+    var password = req.body.password;
+
+    //check if secret key is valid
+    if (secret_key !== Configs.admin_secret_key) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        return;
+    }
+    //now generate a hash of password and store in database
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+        // Store hash in your password DB.
+        if (!err) {
+            db.collection('users').add({
+                username: username,
+                password: hash
+            }).then(ref => {
+                console.log('New user created!', username, ref.id);
+                res.status(HttpStatus.OK).send({success: true, username: username});
+                return;
+            }).catch((err) => {
+                console.log(err, username);
+            });
+        } else {
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+        }
+
+    });
+
+});
+
+app.post('/verifyJWT', (req, res) => {
+    var user_secret = req.body.user_secret;
+    if (!user_secret) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.MISSING_USER_KEY);
+        return;
+    }
+
+    // verify user secret key
+    jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
+        if (!err && decoded.username) {
+            res.status(HttpStatus.OK).send({success: true});
+        } else {
+           // console.log(err);
+            res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        }
+    });
+});
+
+app.post('/login', (req, res) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    if (!username || !password) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_INPUTS);
+        return;
+    }
+
+    //check in database, if found true generate a secret key
+    db.collection('users').where('username', '==', username).limit(1).get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                console.log('No matching users for username: ' + username);
+                res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_INPUTS);
+                return true;
+            } else {
+                // generate a secret key and add to database
+                snapshot.forEach(doc => {
+                    //compare password with stored hash
+                    let user = doc.data();
+                    // console.log(user);
+                    bcrypt.compare(password, user.password, (err, result) => {
+                        if (!err) {
+                            if (result) {
+                                // console.log("password matched");
+                                jwt.sign({
+                                    username: user.username,
+                                    password: user.password
+                                }, Configs.JWT_PRIVATE_KEY, {
+                                    algorithm: 'RS256',
+                                    expiresIn: '15d'
+                                }, (err, token) => {
+                                    if (!err) {
+                                        //  console.log(token);
+                                        res.status(HttpStatus.OK).send({success: true, user_secret: token})
+                                    } else {
+                                        console.log(err);
+                                        res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+                                    }
+                                });
+                            } else {
+                                //wrong password
+                                res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_INPUTS);
+                            }
+                        } else {
+                            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+                        }
+
+                    });
+
+                });
+            }
+            return true;
+        }).catch((err) => {
+        console.log(err, username, password);
+    });
+
+});
 
 app.post('/saveMedia', (req, res) => {
     var user_secret = req.body.user_secret;
@@ -45,43 +154,32 @@ app.post('/saveMedia', (req, res) => {
     }
 
     // verify user secret key
-    db.collection('users').where('secret', '==', user_secret).limit(1).get()
-        .then(snapshot => {
-                if (snapshot.empty) {
-                    console.log('No matching users for secret: ' + user_secret);
-                    res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
-                    return true;
-                } else {
-                    //save the data to database
-                    snapshot.forEach(doc => {
-                        let user = doc.data();
-                        let template = Templates.getMediaTemplate(data, {username: user.username});
-                        if (!template) {
-                            res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
-                            return;
-                        }
-                        // add timestamp to template
-                        template['created_at'] = FieldValue.serverTimestamp();
-
-                        db.collection('uploads').add(template).then(ref => {
-                            console.log('Added document with ID: ', ref.id);
-                            res.status(HttpStatus.OK).send({success: true, upload_id: ref.id});
-                            return;
-                        }).catch(error => {
-                            console.log(error);
-                            var message = FAIL.INTERNAL_ERROR;
-                            message.error = error;
-                            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
-                        });
-                    });
-                }
+    jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
+        if (!err) {
+            let template = Templates.getMediaTemplate(data, {username: decoded.username});
+            if (!template) {
+                res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
                 return;
             }
-        )
-        .catch(err => {
+            // add timestamp to template
+            template['created_at'] = FieldValue.serverTimestamp();
+
+            db.collection('uploads').add(template).then(ref => {
+                console.log('Added document with ID: ', ref.id);
+                res.status(HttpStatus.OK).send({success: true, media_id: ref.id});
+                return;
+            }).catch(error => {
+                console.log(error);
+                var message = FAIL.INTERNAL_ERROR;
+                message.error = error;
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+            });
+        } else {
             console.log(err);
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
-        });
+            res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        }
+    });
+
 });
 
 
@@ -120,7 +218,7 @@ app.post('/getLatest', (req, res) => {
                     let data = [];
                     snapshot.forEach(doc => {
                         let content = doc.data();
-                        content['media_id']= doc.id;
+                        content['media_id'] = doc.id;
                         data.push(content);
                     });
                     res.status(HttpStatus.OK).send({success: true, data: data});
@@ -142,7 +240,7 @@ app.post('/getLatest', (req, res) => {
                         let data = [];
                         snapshot.forEach(doc => {
                             let content = doc.data();
-                            content['media_id']= doc.id;
+                            content['media_id'] = doc.id;
                             data.push(content);
                         });
                         res.status(HttpStatus.OK).send({success: true, data: data});
@@ -164,7 +262,7 @@ app.post('/getLatest', (req, res) => {
                         let data = [];
                         snapshot.forEach(doc => {
                             let content = doc.data();
-                            content['media_id']= doc.id;
+                            content['media_id'] = doc.id;
                             data.push(content);
                         });
                         res.status(HttpStatus.OK).send({success: true, data: data});
@@ -180,28 +278,6 @@ app.post('/getLatest', (req, res) => {
 });
 
 
-// app.post('/search', (req, res) => {
-//     var title = req.body.title;
-//     if (!title) {
-//         res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
-//         return;
-//     }
-//
-//     //search in algolia index
-//     var index = search_client.initIndex('titles');
-//     index.search(title).then(result => {
-//         console.log(result.hits);
-//         if (result.hits.length > 0) res.status(HttpStatus.OK).send({success: true, data: result.hits});
-//         else res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
-//         return;
-//     }).catch(err => {
-//         console.log(err);
-//         res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
-//     });
-//
-// });
-
-
 var FAIL = {
     INVALID_INPUTS: {
         success: false,
@@ -209,7 +285,7 @@ var FAIL = {
     },
     INVALID_USER_KEY: {
         success: false,
-        message: "User secret key is invalid"
+        message: "User secret key is invalid or has expired"
     },
     MISSING_USER_KEY: {
         success: false,
@@ -244,7 +320,7 @@ exports.onTitleCreated = functions.firestore.document('uploads/{media_id}').onCr
     entry.objectID = context.params.media_id;
 
     // Write to the algolia index
-    const index = admin_client.initIndex(ALGOLIA_INDEX_NAME);
+    const index = admin_client.initIndex(Configs.ALGOLIA_INDEX_NAME);
     return index.saveObject(entry);
 });
 
