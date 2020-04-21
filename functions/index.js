@@ -23,6 +23,7 @@ admin.initializeApp({
 });
 const db = admin.firestore();
 let FieldValue = admin.firestore.FieldValue;
+let Timestamp = admin.firestore.Timestamp;
 
 // Initialize Algolia
 const admin_client = algoliasearch(Configs.ALGOLIA_ID, Configs.ALGOLIA_ADMIN_KEY);
@@ -77,7 +78,7 @@ app.post('/verifyJWT', (req, res) => {
         if (!err && decoded.username) {
             res.status(HttpStatus.OK).send({success: true});
         } else {
-           // console.log(err);
+            // console.log(err);
             res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
         }
     });
@@ -208,73 +209,39 @@ app.post('/getMedia', (req, res) => {
 
 app.post('/getLatest', (req, res) => {
     let filters = req.body.filters;
-    if (!filters) {
-        //get normal latest data
-        db.collection('uploads').orderBy('created_at', 'desc').limit(9).get()
-            .then(snapshot => {
-                if (snapshot.empty) {
-                    res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
-                } else {
-                    let data = [];
-                    snapshot.forEach(doc => {
-                        let content = doc.data();
-                        content['media_id'] = doc.id;
-                        data.push(content);
-                    });
-                    res.status(HttpStatus.OK).send({success: true, data: data});
-                }
-                return;
-            })
-            .catch(err => {
-                console.log(err);
-                res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
-            });
-    } else {
-        if (filters.industry) {
-            //get latest data with industry filter given
-            db.collection('uploads').where('industry', '==', filters.industry).orderBy('created_at', 'desc').limit(9).get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
-                    } else {
-                        let data = [];
-                        snapshot.forEach(doc => {
-                            let content = doc.data();
-                            content['media_id'] = doc.id;
-                            data.push(content);
-                        });
-                        res.status(HttpStatus.OK).send({success: true, data: data});
-                    }
-                    return;
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+
+    let query = db.collection('uploads');
+    if (filters) {
+        if (filters.industry) query = query.where('industry', '==', filters.industry);
+        if (filters.media_type) query = query.where('media_type', '==', filters.media_type);
+
+        query = query.orderBy('created_at', 'desc');
+
+        if (filters.timestamp) query = query.startAfter(new Timestamp(filters.timestamp._seconds, filters.timestamp._nanoseconds));
+
+    } else query = query.orderBy('created_at', 'desc');
+
+    query.limit(3).get()
+        .then(snapshot => {
+            if (snapshot.empty) {
+                res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
+            } else {
+                let data = [];
+                snapshot.forEach(doc => {
+                    let content = doc.data();
+                    content['media_id'] = doc.id;
+                    data.push(content);
                 });
-        }
-        else if (filters.media_type) {
-            //get latest data with industry filter given
-            db.collection('uploads').where('media_type', '==', filters.media_type).orderBy('created_at', 'desc').limit(9).get()
-                .then(snapshot => {
-                    if (snapshot.empty) {
-                        res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
-                    } else {
-                        let data = [];
-                        snapshot.forEach(doc => {
-                            let content = doc.data();
-                            content['media_id'] = doc.id;
-                            data.push(content);
-                        });
-                        res.status(HttpStatus.OK).send({success: true, data: data});
-                    }
-                    return;
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
-                });
-        }
-    }
+               // console.log(data);
+                res.status(HttpStatus.OK).send({success: true, data: data});
+            }
+            return;
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+        });
+
 });
 
 
