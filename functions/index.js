@@ -3,7 +3,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const HttpStatus = require('http-status-codes');
-const serviceAccount = require("./../movies-9eb90-firebase-adminsdk-8xp8n-33f3f8a665.json");
+//const serviceAccount = require("./../movies-9eb90-firebase-adminsdk-8xp8n-33f3f8a665.json");
 const algoliasearch = require('algoliasearch');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -17,10 +17,11 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({origin: true}));
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: Configs.databaseURL
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: Configs.databaseURL
+// });
+admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 let FieldValue = admin.firestore.FieldValue;
 let Timestamp = admin.firestore.Timestamp;
@@ -221,7 +222,7 @@ app.post('/getLatest', (req, res) => {
 
     } else query = query.orderBy('created_at', 'desc');
 
-    query.limit(3).get()
+    query.limit(9).get()
         .then(snapshot => {
             if (snapshot.empty) {
                 res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
