@@ -3,7 +3,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const HttpStatus = require('http-status-codes');
-//const serviceAccount = require("./../movies-9eb90-firebase-adminsdk-8xp8n-33f3f8a665.json");
+const serviceAccount = require("./../filmistaan-1f6ac-firebase-adminsdk-ynqsc-eec8622d5e.json");
 const algoliasearch = require('algoliasearch');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -17,11 +17,12 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({origin: true}));
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: Configs.databaseURL
-// });
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: Configs.databaseURL
+});
+//todo change this initializing before deploying
+//admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 let FieldValue = admin.firestore.FieldValue;
 let Timestamp = admin.firestore.Timestamp;
@@ -290,6 +291,35 @@ exports.onTitleCreated = functions.firestore.document('uploads/{media_id}').onCr
     // Write to the algolia index
     const index = admin_client.initIndex(Configs.ALGOLIA_INDEX_NAME);
     return index.saveObject(entry);
+});
+
+
+exports.backupDatabase = functions.region('asia-northeast1').https.onRequest((req, res) => {
+    var secret_key = req.body.secret_key;
+
+    //check if secret key is valid
+    if (secret_key !== Configs.admin_secret_key) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        return;
+    }
+
+    //prepare a backup of all data and send as JSON file
+    return db.collection('uploads').get().then((querySnapshot)=>{
+        const orders = [];
+
+        querySnapshot.forEach(doc => {
+            const order = doc.data();
+            orders.push(order);
+        });
+        res.setHeader(
+            "Content-disposition",
+            "attachment; filename=report.json"
+        );
+        res.set("Content-Type", "application/json");
+        res.status(HttpStatus.OK).send(orders);
+    }).catch((err) => {
+        console.log(err);
+    });
 });
 
 exports.services = functions.region('asia-northeast1').https.onRequest(app);
