@@ -3,7 +3,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const HttpStatus = require('http-status-codes');
-const serviceAccount = require("./../filmistaan-1f6ac-firebase-adminsdk-ynqsc-eec8622d5e.json");
+//const serviceAccount = require("./../filmistaan-1f6ac-firebase-adminsdk-ynqsc-eec8622d5e.json");
 const algoliasearch = require('algoliasearch');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -17,12 +17,12 @@ const app = express();
 // Automatically allow cross-origin requests
 app.use(cors({origin: true}));
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: Configs.databaseURL
-});
-//todo change this initializing before deploying
-//admin.initializeApp(functions.config().firebase);
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: Configs.databaseURL
+// });
+
+admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 let FieldValue = admin.firestore.FieldValue;
 let Timestamp = admin.firestore.Timestamp;
