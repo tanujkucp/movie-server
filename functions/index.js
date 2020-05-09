@@ -3,7 +3,7 @@ const express = require('express');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const HttpStatus = require('http-status-codes');
-//const serviceAccount = require("./../filmistaan-1f6ac-firebase-adminsdk-ynqsc-eec8622d5e.json");
+const serviceAccount = require("./../filmistaan-1f6ac-firebase-adminsdk-ynqsc-eec8622d5e.json");
 const algoliasearch = require('algoliasearch');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -14,15 +14,20 @@ let Configs = require('./Configs');
 ////////////////////////////// initialize services //////////////////////////////////////
 
 const app = express();
+const getMedia = express();
+const getLatest = express();
+
 // Automatically allow cross-origin requests
 app.use(cors({origin: true}));
+getMedia.use(cors({origin: true}));
+getLatest.use(cors({origin: true}));
 
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount),
-//     databaseURL: Configs.databaseURL
-// });
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: Configs.databaseURL
+});
 
-admin.initializeApp(functions.config().firebase);
+//admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 let FieldValue = admin.firestore.FieldValue;
 let Timestamp = admin.firestore.Timestamp;
@@ -182,34 +187,41 @@ app.post('/saveMedia', (req, res) => {
             res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
         }
     });
-
 });
 
+app.post('/backupDatabase', (req, res) => {
+    var secret_key = req.body.secret_key;
 
-app.post('/getMedia', (req, res) => {
-    var media_id = req.body.media_id;
-    if (!media_id) {
-        res.status(HttpStatus.BAD_REQUEST).send(FAIL.MISSING_MEDIA_ID);
+    //check if secret key is valid
+    if (secret_key !== Configs.admin_secret_key) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
         return;
     }
-    //return media details from database
-    db.collection('uploads').doc(media_id).get()
-        .then(doc => {
-            if (!doc.exists) {
-                res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
-            } else {
-                res.status(HttpStatus.OK).send({success: true, data: doc.data()});
-            }
-            return;
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+
+    //prepare a backup of all data and send as JSON file
+    db.collection('uploads').get().then((querySnapshot) => {
+        const orders = [];
+
+        querySnapshot.forEach(doc => {
+            const order = doc.data();
+            orders.push(order);
         });
+        res.setHeader(
+            "Content-disposition",
+            "attachment; filename=report.json"
+        );
+        res.set("Content-Type", "application/json");
+        res.status(HttpStatus.OK).send(orders);
+        return;
+    }).catch((err) => {
+        console.log(err);
+    });
 });
 
 
-app.post('/getLatest', (req, res) => {
+////////////////// A separate Function for GetLatest alone so to keep traffic low /////////////////////////
+
+getLatest.post('', (req, res) => {
     let filters = req.body.filters;
 
     let query = db.collection('uploads');
@@ -234,7 +246,7 @@ app.post('/getLatest', (req, res) => {
                     content['media_id'] = doc.id;
                     data.push(content);
                 });
-               // console.log(data);
+                // console.log(data);
                 res.status(HttpStatus.OK).send({success: true, data: data});
             }
             return;
@@ -243,10 +255,57 @@ app.post('/getLatest', (req, res) => {
             console.log(err);
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
         });
-
 });
 
 
+////////////////// A separate Function for GetMedia alone so to keep traffic low /////////////////////////
+
+getMedia.post('',(req, res) => {
+    var media_id = req.body.media_id;
+   // console.log(req.body);
+    if (!media_id) {
+        res.status(HttpStatus.BAD_REQUEST).send(FAIL.MISSING_MEDIA_ID);
+        return;
+    }
+   // console.log(media_id);
+    //return media details from database
+    db.collection('uploads').doc(media_id).get()
+        .then(doc => {
+            if (!doc.exists) {
+                res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+            } else {
+                res.status(HttpStatus.OK).send({success: true, data: doc.data()});
+            }
+            return;
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+        });
+});
+
+
+// Update the search index every time a media is uploaded
+exports.onTitleCreated = functions.region('asia-northeast1').firestore.document('uploads/{media_id}').onCreate((snap, context) => {
+    // Get the media document
+    const doc = snap.data();
+
+    let entry = {};
+    entry.title = doc.title;
+    entry.poster_link = doc.poster_link;
+    entry.tags = doc.tags;
+    entry.media_id = context.params.media_id;
+
+    // Add an 'objectID' field which Algolia requires
+    entry.objectID = context.params.media_id;
+
+    // Write to the algolia index
+    const index = admin_client.initIndex(Configs.ALGOLIA_INDEX_NAME);
+    return index.saveObject(entry);
+});
+
+
+/////////////////////////////// Error Messages //////////////////////////////////
 var FAIL = {
     INVALID_INPUTS: {
         success: false,
@@ -274,52 +333,7 @@ var FAIL = {
     }
 };
 
-// Update the search index every time a blog post is written.
-exports.onTitleCreated = functions.firestore.document('uploads/{media_id}').onCreate((snap, context) => {
-    // Get the media document
-    const doc = snap.data();
-
-    let entry = {};
-    entry.title = doc.title;
-    entry.poster_link = doc.poster_link;
-    entry.tags = doc.tags;
-    entry.media_id = context.params.media_id;
-
-    // Add an 'objectID' field which Algolia requires
-    entry.objectID = context.params.media_id;
-
-    // Write to the algolia index
-    const index = admin_client.initIndex(Configs.ALGOLIA_INDEX_NAME);
-    return index.saveObject(entry);
-});
-
-
-exports.backupDatabase = functions.region('asia-northeast1').https.onRequest((req, res) => {
-    var secret_key = req.body.secret_key;
-
-    //check if secret key is valid
-    if (secret_key !== Configs.admin_secret_key) {
-        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
-        return;
-    }
-
-    //prepare a backup of all data and send as JSON file
-    return db.collection('uploads').get().then((querySnapshot)=>{
-        const orders = [];
-
-        querySnapshot.forEach(doc => {
-            const order = doc.data();
-            orders.push(order);
-        });
-        res.setHeader(
-            "Content-disposition",
-            "attachment; filename=report.json"
-        );
-        res.set("Content-Type", "application/json");
-        res.status(HttpStatus.OK).send(orders);
-    }).catch((err) => {
-        console.log(err);
-    });
-});
-
+// export and create separate functions to keep pressure low
 exports.services = functions.region('asia-northeast1').https.onRequest(app);
+exports.getMedia = functions.region('asia-northeast1').https.onRequest(getMedia);
+exports.getLatest = functions.region('asia-northeast1').https.onRequest(getLatest);
