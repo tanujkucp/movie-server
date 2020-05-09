@@ -20,14 +20,15 @@ let getMediaTemplate = function (parameters, extras) {
             case 'downloads':
             case 'poster_link':
 
-
                 template[key] = parameters[key];
                 break;
         }
     }
 
-    //the user who uploaded this media
-    template.username = extras.username;
+    if (extras !== null) {
+        //the user who uploaded this media
+        template.username = extras.username;
+    }
 
     return template;
 };

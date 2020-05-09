@@ -160,7 +160,7 @@ app.post('/saveMedia', (req, res) => {
         res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
         return;
     }
-
+    //console.log(data);
     // verify user secret key
     jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
         if (!err) {
@@ -189,8 +189,79 @@ app.post('/saveMedia', (req, res) => {
     });
 });
 
-app.post('/backupDatabase', (req, res) => {
-    var secret_key = req.body.secret_key;
+app.post('/updateMedia', (req, res) => {
+    var user_secret = req.body.user_secret;
+    let media_id = req.body.media_id;
+    var data = req.body.data;
+    if (!user_secret) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.MISSING_USER_KEY);
+        return;
+    } else if (!data || !media_id) {
+        res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+        return;
+    }
+
+    // verify user secret key
+    jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
+        if (!err) {
+            let template = Templates.getMediaTemplate(data, null);
+            if (!template) {
+                res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+                return;
+            }
+            // add timestamp to template
+            //  template['created_at'] = FieldValue.serverTimestamp();
+
+            db.collection('uploads').doc(media_id).update(template).then(() => {
+                console.log('Updated document with ID: ' + media_id);
+                res.status(HttpStatus.OK).send({success: true, media_id: media_id});
+                return;
+            }).catch(error => {
+                console.log(error);
+                var message = FAIL.INTERNAL_ERROR;
+                message.error = error;
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+            });
+        } else {
+            console.log(err);
+            res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        }
+    });
+});
+
+app.post('/deleteMedia', (req, res) => {
+    var user_secret = req.body.user_secret;
+    let media_id = req.body.media_id;
+    if (!user_secret) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.MISSING_USER_KEY);
+        return;
+    } else if (!media_id) {
+        res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+        return;
+    }
+    // verify user secret key
+    jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
+        if (!err) {
+            db.collection('uploads').doc(media_id).delete().then(() => {
+                console.log('Deleted document with ID: ' + media_id);
+                res.status(HttpStatus.OK).send({success: true});
+                return;
+            }).catch(error => {
+                console.log(error);
+                var message = FAIL.INTERNAL_ERROR;
+                message.error = error;
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+            });
+        } else {
+            console.log(err);
+            res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        }
+    });
+
+});
+
+app.get('/backupDatabase', (req, res) => {
+    var secret_key = req.query.secretKey;
 
     //check if secret key is valid
     if (secret_key !== Configs.admin_secret_key) {
@@ -260,14 +331,14 @@ getLatest.post('', (req, res) => {
 
 ////////////////// A separate Function for GetMedia alone so to keep traffic low /////////////////////////
 
-getMedia.post('',(req, res) => {
+getMedia.post('', (req, res) => {
     var media_id = req.body.media_id;
-   // console.log(req.body);
+    // console.log(req.body);
     if (!media_id) {
         res.status(HttpStatus.BAD_REQUEST).send(FAIL.MISSING_MEDIA_ID);
         return;
     }
-   // console.log(media_id);
+    // console.log(media_id);
     //return media details from database
     db.collection('uploads').doc(media_id).get()
         .then(doc => {
