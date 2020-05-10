@@ -89,7 +89,7 @@
       <workItem from="1588845318447" duration="58000" />
       <workItem from="1588848146112" duration="1340000" />
       <workItem from="1589004501166" duration="16618000" />
-      <workItem from="1589093955870" duration="5355000" />
+      <workItem from="1589093955870" duration="13350000" />
     </task>
     <task id="LOCAL-00001" summary="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion">
       <created>1589011223495</created>
@@ -119,7 +119,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589100059760</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Backup File is now named on Date of backup">
+      <created>1589107266349</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1589107266349</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -142,37 +149,38 @@
     <MESSAGE value="Made updateMedia and deleteMedia API" />
     <MESSAGE value="updated getlatest api to only provide some fields instead of all" />
     <MESSAGE value="all strings in upload are now trimmed" />
-    <option name="LAST_COMMIT_MESSAGE" value="all strings in upload are now trimmed" />
+    <MESSAGE value="Backup File is now named on Date of backup" />
+    <option name="LAST_COMMIT_MESSAGE" value="Backup File is now named on Date of backup" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589100059604">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589107266250">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589100059604" />
-    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1589100216692">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589107266250" />
+    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1589131054807">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1589100216692" />
-    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1589100216686">
+    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1589131054807" />
+    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1589131054804">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1589100216686" />
-    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1589100216684">
+    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1589131054804" />
+    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1589131054802">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1589100216684" />
-    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1589100216691">
+    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1589131054802" />
+    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1589131054806">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1589100216691" />
+    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1589131054806" />
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor" timestamp="1589005726044">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor/58.27.1308.741@58.27.1308.741" timestamp="1589005726044" />
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1589099160355">
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1589112753198">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1589099160355" />
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1589112753198" />
     <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1589006284465">
       <screen x="58" y="27" width="1308" height="741" />
     </state>

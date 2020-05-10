@@ -243,7 +243,7 @@ app.post('/deleteMedia', (req, res) => {
     jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
         if (!err) {
             db.collection('uploads').doc(media_id).delete().then(() => {
-                console.log('Deleted document with ID: ' + media_id);
+                console.log('Deleted document with ID: ' + media_id + ' by user: ' + decoded.username);
                 res.status(HttpStatus.OK).send({success: true});
                 return;
             }).catch(error => {
@@ -260,8 +260,8 @@ app.post('/deleteMedia', (req, res) => {
 
 });
 
-app.get('/backupDatabase', (req, res) => {
-    var secret_key = req.query.secretKey;
+app.post('/backupDatabase', (req, res) => {
+    var secret_key = req.body.secret_key;
 
     //check if secret key is valid
     if (secret_key !== Configs.admin_secret_key) {
@@ -273,17 +273,17 @@ app.get('/backupDatabase', (req, res) => {
     db.collection('uploads').get().then((querySnapshot) => {
         const orders = [];
         let datetime = new Date();
-        let filename = datetime.toISOString().slice(0,10) + " Backup-uploads.json"
+        let filename = datetime.toISOString().slice(0, 10) + " Backup-uploads.json"
         querySnapshot.forEach(doc => {
             const order = doc.data();
             orders.push(order);
         });
-        res.setHeader(
-            "Content-disposition",
-            "attachment; filename="+filename
-        );
-        res.set("Content-Type", "application/json");
-        res.status(HttpStatus.OK).send(orders);
+        // res.setHeader(
+        //     "Content-disposition",
+        //     "attachment; filename=" + filename
+        // );
+        //res.set("Content-Type", "application/json");
+        res.status(HttpStatus.OK).send({filename: filename, data: orders});
         return;
     }).catch((err) => {
         console.log(err);
@@ -307,7 +307,7 @@ getLatest.post('', (req, res) => {
 
     } else query = query.orderBy('created_at', 'desc');
 
-    query.select('title','genre', 'poster_link', 'tags', 'created_at').limit(9).get()
+    query.select('title', 'genre', 'poster_link', 'tags', 'created_at', 'username').limit(9).get()
         .then(snapshot => {
             if (snapshot.empty) {
                 res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);
