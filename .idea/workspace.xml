@@ -21,7 +21,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f289fc9c-2187-4b14-b90d-ee590ec178aa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/templates.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/templates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +89,7 @@
       <workItem from="1588845318447" duration="58000" />
       <workItem from="1588848146112" duration="1340000" />
       <workItem from="1589004501166" duration="16618000" />
-      <workItem from="1589093955870" duration="4348000" />
+      <workItem from="1589093955870" duration="5355000" />
     </task>
     <task id="LOCAL-00001" summary="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion">
       <created>1589011223495</created>
@@ -112,7 +112,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589099153599</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="all strings in upload are now trimmed">
+      <created>1589100059760</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1589100059760</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -134,29 +141,30 @@
     <MESSAGE value="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion" />
     <MESSAGE value="Made updateMedia and deleteMedia API" />
     <MESSAGE value="updated getlatest api to only provide some fields instead of all" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated getlatest api to only provide some fields instead of all" />
+    <MESSAGE value="all strings in upload are now trimmed" />
+    <option name="LAST_COMMIT_MESSAGE" value="all strings in upload are now trimmed" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589099153199">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589100059604">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589099153199" />
-    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1589099989305">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589100059604" />
+    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1589100216692">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1589099989305" />
-    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1589099989303">
+    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1589100216692" />
+    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1589100216686">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1589099989303" />
-    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1589099989303">
+    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1589100216686" />
+    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1589100216684">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1589099989303" />
-    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1589099989304">
+    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1589100216684" />
+    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1589100216691">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1589099989304" />
+    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1589100216691" />
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor" timestamp="1589005726044">
       <screen x="58" y="27" width="1308" height="741" />
     </state>

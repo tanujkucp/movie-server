@@ -272,14 +272,15 @@ app.get('/backupDatabase', (req, res) => {
     //prepare a backup of all data and send as JSON file
     db.collection('uploads').get().then((querySnapshot) => {
         const orders = [];
-
+        let datetime = new Date();
+        let filename = datetime.toISOString().slice(0,10) + " Backup-uploads.json"
         querySnapshot.forEach(doc => {
             const order = doc.data();
             orders.push(order);
         });
         res.setHeader(
             "Content-disposition",
-            "attachment; filename=report.json"
+            "attachment; filename="+filename
         );
         res.set("Content-Type", "application/json");
         res.status(HttpStatus.OK).send(orders);
