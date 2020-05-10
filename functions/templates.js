@@ -16,7 +16,7 @@ let getMediaTemplate = function (parameters, extras) {
             case 'description':
             case 'youtube_trailer_video_id':
             case 'poster_link':
-                template[key] = parameters[key];
+                    template[key] = (parameters[key]).trim();
                 break;
 
             case 'tags':
