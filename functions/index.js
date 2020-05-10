@@ -306,7 +306,7 @@ getLatest.post('', (req, res) => {
 
     } else query = query.orderBy('created_at', 'desc');
 
-    query.limit(9).get()
+    query.select('title','genre', 'poster_link', 'tags', 'created_at').limit(9).get()
         .then(snapshot => {
             if (snapshot.empty) {
                 res.status(HttpStatus.NOT_FOUND).send(FAIL.NOT_FOUND);

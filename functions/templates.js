@@ -13,12 +13,15 @@ let getMediaTemplate = function (parameters, extras) {
             case 'IMDb_rating':
             case 'industry':
             case 'media_type':
-            case 'tags':
             case 'description':
             case 'youtube_trailer_video_id':
+            case 'poster_link':
+                template[key] = parameters[key];
+                break;
+
+            case 'tags':
             case 'screenshots':
             case 'downloads':
-            case 'poster_link':
 
                 template[key] = parameters[key];
                 break;
