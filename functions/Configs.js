@@ -4,6 +4,8 @@ const ALGOLIA_ADMIN_KEY = '6c843a93ee1af8a0b03034fa81edd647';
 //  const ALGOLIA_SEARCH_KEY = '680a915d8b1ce3c430b1412f34f89ec3';
 const ALGOLIA_INDEX_NAME = 'titles';
 const databaseURL = "https://filmistaan-1f6ac.firebaseio.com";
+const website_address = "https://filmistaan.web.app";
+const website_admin_address = "https://filmistaan-admin.web.app";
 
 const JWT_PRIVATE_KEY = "-----BEGIN RSA PRIVATE KEY-----\n" +
     "MIIJKAIBAAKCAgEArvPrp2SLIHWGYsht26x680bqTC4NhxRxy3UVifNEt4OZOGB8\n" +
@@ -79,5 +81,7 @@ module.exports = {
     ALGOLIA_INDEX_NAME: ALGOLIA_INDEX_NAME,
     databaseURL: databaseURL,
     JWT_PRIVATE_KEY: JWT_PRIVATE_KEY,
-    JWT_PUBLIC_KEY: JWT_PUBLIC_KEY
+    JWT_PUBLIC_KEY: JWT_PUBLIC_KEY,
+    website_address: website_address,
+    website_admin_address: website_admin_address
 };

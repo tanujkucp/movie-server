@@ -74,6 +74,10 @@ app.post('/createAdminAccount', (req, res) => {
 });
 
 app.post('/verifyJWT', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var user_secret = req.body.user_secret;
     if (!user_secret) {
         res.status(HttpStatus.UNAUTHORIZED).send(FAIL.MISSING_USER_KEY);
@@ -92,6 +96,10 @@ app.post('/verifyJWT', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var username = req.body.username;
     var password = req.body.password;
     if (!username || !password) {
@@ -151,6 +159,10 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/saveMedia', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var user_secret = req.body.user_secret;
     var data = req.body.data;
     if (!user_secret) {
@@ -190,6 +202,10 @@ app.post('/saveMedia', (req, res) => {
 });
 
 app.post('/updateMedia', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var user_secret = req.body.user_secret;
     let media_id = req.body.media_id;
     var data = req.body.data;
@@ -230,6 +246,10 @@ app.post('/updateMedia', (req, res) => {
 });
 
 app.post('/deleteMedia', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var user_secret = req.body.user_secret;
     let media_id = req.body.media_id;
     if (!user_secret) {
@@ -261,6 +281,10 @@ app.post('/deleteMedia', (req, res) => {
 });
 
 app.post('/backupDatabase', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var secret_key = req.body.secret_key;
 
     //check if secret key is valid
@@ -278,11 +302,6 @@ app.post('/backupDatabase', (req, res) => {
             const order = doc.data();
             orders.push(order);
         });
-        // res.setHeader(
-        //     "Content-disposition",
-        //     "attachment; filename=" + filename
-        // );
-        //res.set("Content-Type", "application/json");
         res.status(HttpStatus.OK).send({filename: filename, data: orders});
         return;
     }).catch((err) => {
@@ -294,6 +313,10 @@ app.post('/backupDatabase', (req, res) => {
 ////////////////// A separate Function for GetLatest alone so to keep traffic low /////////////////////////
 
 getLatest.post('', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     let filters = req.body.filters;
 
     let query = db.collection('uploads');
@@ -333,13 +356,16 @@ getLatest.post('', (req, res) => {
 ////////////////// A separate Function for GetMedia alone so to keep traffic low /////////////////////////
 
 getMedia.post('', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        res.end();
+        return;
+    }
     var media_id = req.body.media_id;
     // console.log(req.body);
     if (!media_id) {
         res.status(HttpStatus.BAD_REQUEST).send(FAIL.MISSING_MEDIA_ID);
         return;
     }
-    // console.log(media_id);
     //return media details from database
     db.collection('uploads').doc(media_id).get()
         .then(doc => {
