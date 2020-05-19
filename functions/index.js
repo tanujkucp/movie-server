@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 
 let Templates = require('./templates');
 let Configs = require('./Configs');
+let Enums = require('./enums');
 
 ////////////////////////////// initialize services //////////////////////////////////////
 
@@ -75,6 +76,7 @@ app.post('/createAdminAccount', (req, res) => {
 
 app.post('/verifyJWT', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -97,6 +99,7 @@ app.post('/verifyJWT', (req, res) => {
 
 app.post('/login', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -160,6 +163,7 @@ app.post('/login', (req, res) => {
 
 app.post('/saveMedia', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -203,6 +207,7 @@ app.post('/saveMedia', (req, res) => {
 
 app.post('/updateMedia', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -247,6 +252,7 @@ app.post('/updateMedia', (req, res) => {
 
 app.post('/deleteMedia', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -282,6 +288,7 @@ app.post('/deleteMedia', (req, res) => {
 
 app.post('/backupDatabase', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -314,6 +321,7 @@ app.post('/backupDatabase', (req, res) => {
 
 getLatest.post('', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
@@ -321,14 +329,16 @@ getLatest.post('', (req, res) => {
 
     let query = db.collection('uploads');
     if (filters) {
+        //  console.log(filters);
         if (filters.industry) query = query.where('industry', '==', filters.industry);
+        else query = query.where('industry', 'in', [Enums.Industry.BOLLYWOOD, Enums.Industry.HOLLYWOOD, Enums.Industry.OTHER]);
+
         if (filters.media_type) query = query.where('media_type', '==', filters.media_type);
 
         query = query.orderBy('created_at', 'desc');
 
         if (filters.timestamp) query = query.startAfter(new Timestamp(filters.timestamp._seconds, filters.timestamp._nanoseconds));
-
-    } else query = query.orderBy('created_at', 'desc');
+    } else query = query.where('industry', 'in', [Enums.Industry.BOLLYWOOD, Enums.Industry.HOLLYWOOD, Enums.Industry.OTHER]).orderBy('created_at', 'desc');
 
     query.select('title', 'genre', 'poster_link', 'tags', 'created_at', 'username').limit(9).get()
         .then(snapshot => {
@@ -357,6 +367,7 @@ getLatest.post('', (req, res) => {
 
 getMedia.post('', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : "+ req.get('origin'));
         res.end();
         return;
     }
