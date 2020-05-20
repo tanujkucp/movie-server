@@ -20,7 +20,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f289fc9c-2187-4b14-b90d-ee590ec178aa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/functions/enums.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
     </list>
@@ -102,7 +101,8 @@
       <workItem from="1589539896172" duration="102000" />
       <workItem from="1589541603288" duration="1533000" />
       <workItem from="1589876229768" duration="4318000" />
-      <workItem from="1589882651143" duration="2073000" />
+      <workItem from="1589882651143" duration="2271000" />
+      <workItem from="1589972612389" duration="702000" />
     </task>
     <task id="LOCAL-00001" summary="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion">
       <created>1589011223495</created>
@@ -153,7 +153,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589542761185</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="- Added support for Adult section, adult videos dont show in any other section.">
+      <created>1589889969878</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1589889969878</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,37 +186,38 @@
     <MESSAGE value="Backup File is now named on Date of backup" />
     <MESSAGE value="Backup API is not POST for security" />
     <MESSAGE value="- Added a check to reject requests outside of our 2 websites" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added a check to reject requests outside of our 2 websites" />
+    <MESSAGE value="- Added support for Adult section, adult videos dont show in any other section." />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added support for Adult section, adult videos dont show in any other section." />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589542761026">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589889969771">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589542761026" />
-    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1589889774708">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589889969771" />
+    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1589972945397">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1589889774708" />
-    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1589889774704">
+    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1589972945397" />
+    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1589972945396">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1589889774704" />
-    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1589889774702">
+    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1589972945396" />
+    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1589972945394">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1589889774702" />
-    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1589889774707">
+    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1589972945394" />
+    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1589972945396">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1589889774706" />
+    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1589972945396" />
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor" timestamp="1589005726044">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor/58.27.1308.741@58.27.1308.741" timestamp="1589005726044" />
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1589132486124">
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1589889976490">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1589132486124" />
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1589889976490" />
     <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1589006284465">
       <screen x="58" y="27" width="1308" height="741" />
     </state>

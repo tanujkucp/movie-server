@@ -309,7 +309,7 @@ app.post('/backupDatabase', (req, res) => {
             const order = doc.data();
             orders.push(order);
         });
-        res.status(HttpStatus.OK).send({filename: filename, data: orders});
+        res.status(HttpStatus.OK).send({filename: filename, data: JSON.stringify(orders)});
         return;
     }).catch((err) => {
         console.log(err);
