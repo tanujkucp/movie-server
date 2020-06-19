@@ -17,11 +17,13 @@ let Enums = require('./enums');
 const app = express();
 const getMedia = express();
 const getLatest = express();
+const getAd = express();
 
 // Automatically allow cross-origin requests
 app.use(cors({origin: true}));
 getMedia.use(cors({origin: true}));
 getLatest.use(cors({origin: true}));
+getAd.use(cors({origin: true}));
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -75,8 +77,8 @@ app.post('/createAdminAccount', (req, res) => {
 });
 
 app.post('/verifyJWT', (req, res) => {
-    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -98,8 +100,8 @@ app.post('/verifyJWT', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
-    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -162,8 +164,8 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/saveMedia', (req, res) => {
-    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -206,8 +208,8 @@ app.post('/saveMedia', (req, res) => {
 });
 
 app.post('/updateMedia', (req, res) => {
-    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -251,8 +253,8 @@ app.post('/updateMedia', (req, res) => {
 });
 
 app.post('/deleteMedia', (req, res) => {
-    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -287,8 +289,8 @@ app.post('/deleteMedia', (req, res) => {
 });
 
 app.post('/backupDatabase', (req, res) => {
-    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -316,12 +318,86 @@ app.post('/backupDatabase', (req, res) => {
     });
 });
 
+app.post('/saveAd', (req, res) => {
+    if (req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
+        res.end();
+        return;
+    }
+    var user_secret = req.body.user_secret;
+    var data = req.body.data;
+    if (!user_secret) {
+        res.status(HttpStatus.UNAUTHORIZED).send(FAIL.MISSING_USER_KEY);
+        return;
+    } else if (!data) {
+        res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+        return;
+    }
+    //console.log(data);
+    // verify user secret key
+    jwt.verify(user_secret, Configs.JWT_PUBLIC_KEY, {algorithms: ['RS256']}, (err, decoded) => {
+        if (!err) {
+            db.collection('ads').doc(data.page)
+                .set({
+                    image: (data.image).trim(),
+                    link: (data.link).trim(),
+                    enabled: data.enabled
+                }, {merge: true})
+                .then(() => {
+                    console.log('Saved Ad in page: ' + data.page);
+                    res.status(HttpStatus.OK).send({success: true});
+                    return;
+                }).catch(error => {
+                console.log(error);
+                var message = FAIL.INTERNAL_ERROR;
+                message.error = error;
+                res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(message);
+            });
+        } else {
+            console.log(err);
+            res.status(HttpStatus.UNAUTHORIZED).send(FAIL.INVALID_USER_KEY);
+        }
+    });
+
+});
+
+////////////////// A separate function for fetching Ads for the pages /////////////////////////////////////
+
+getAd.post('', (req, res) => {
+    if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
+        console.log("Request blocked from origin : " + req.get('origin'));
+        res.end();
+        return;
+    }
+
+    let page = req.body.page;
+    let query = db.collection('ads');
+    if (page) query = query.doc(page);
+    else query = query.doc('home');
+
+    query.get().then(doc => {
+            if (!doc.exists) {
+                res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+            } else {
+                let data = doc.data();
+                if(data.enabled) res.status(HttpStatus.OK).send({success: true, data: data});
+                else res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+            }
+            return;
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);
+        });
+
+});
+
 
 ////////////////// A separate Function for GetLatest alone so to keep traffic low /////////////////////////
 
 getLatest.post('', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -367,7 +443,7 @@ getLatest.post('', (req, res) => {
 
 getMedia.post('', (req, res) => {
     if (req.get('origin') !== Configs.website_address && req.get('origin') !== Configs.website_admin_address) {
-        console.log("Request blocked from origin : "+ req.get('origin'));
+        console.log("Request blocked from origin : " + req.get('origin'));
         res.end();
         return;
     }
@@ -446,3 +522,4 @@ var FAIL = {
 exports.services = functions.region('asia-northeast1').https.onRequest(app);
 exports.getMedia = functions.region('asia-northeast1').https.onRequest(getMedia);
 exports.getLatest = functions.region('asia-northeast1').https.onRequest(getLatest);
+exports.getAd = functions.region('asia-northeast1').https.onRequest(getAd);
