@@ -22,7 +22,6 @@
     <list default="true" id="f289fc9c-2187-4b14-b90d-ee590ec178aa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/functions/package-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +106,7 @@
       <workItem from="1589973986027" duration="14000" />
       <workItem from="1589981377911" duration="1824000" />
       <workItem from="1589983391009" duration="602000" />
-      <workItem from="1592541208022" duration="4627000" />
+      <workItem from="1592541208022" duration="12978000" />
     </task>
     <task id="LOCAL-00001" summary="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion">
       <created>1589011223495</created>
@@ -172,7 +171,14 @@
       <option name="project" value="LOCAL" />
       <updated>1589973413005</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="- Added saveAd function to services to save the banner ads in database&#10;- Added a new getAd function to fetch ads for page">
+      <created>1592549523963</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1592549523963</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -200,40 +206,41 @@
     <MESSAGE value="- Added a check to reject requests outside of our 2 websites" />
     <MESSAGE value="- Added support for Adult section, adult videos dont show in any other section." />
     <MESSAGE value="- backup json is now stringified before sending" />
-    <option name="LAST_COMMIT_MESSAGE" value="- backup json is now stringified before sending" />
+    <MESSAGE value="- Added saveAd function to services to save the banner ads in database&#10;- Added a new getAd function to fetch ads for page" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Added saveAd function to services to save the banner ads in database&#10;- Added a new getAd function to fetch ads for page" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1589973412592">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1592549523188">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1589973412592" />
-    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1592549258117">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1592549523188" />
+    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1592565607294">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1592549258117" />
-    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1592549258113">
+    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1592565607294" />
+    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1592565607290">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1592549258113" />
-    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1592549258110">
+    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1592565607290" />
+    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1592565607289">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1592549258110" />
-    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1592549258115">
+    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1592565607289" />
+    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1592565607291">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1592549258115" />
+    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1592565607291" />
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor" timestamp="1589005726044">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor/58.27.1308.741@58.27.1308.741" timestamp="1589005726044" />
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1589889976490">
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1592550703638">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1589889976490" />
-    <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1592548635289">
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1592550703638" />
+    <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1592550615162">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog/58.27.1308.741@58.27.1308.741" timestamp="1592548635289" />
+    <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog/58.27.1308.741@58.27.1308.741" timestamp="1592550615162" />
   </component>
 </project>

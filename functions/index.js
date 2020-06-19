@@ -379,9 +379,7 @@ getAd.post('', (req, res) => {
             if (!doc.exists) {
                 res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
             } else {
-                let data = doc.data();
-                if(data.enabled) res.status(HttpStatus.OK).send({success: true, data: data});
-                else res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+                res.status(HttpStatus.OK).send({success: true, data: doc.data()});
             }
             return;
         })
