@@ -187,8 +187,10 @@ app.post('/saveMedia', (req, res) => {
                 res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
                 return;
             }
+
             // add timestamp to template
-            template['created_at'] = FieldValue.serverTimestamp();
+            if (!template.hasOwnProperty('created_at'))
+                template['created_at'] = FieldValue.serverTimestamp();
 
             db.collection('uploads').add(template).then(ref => {
                 console.log('Added document with ID: ', ref.id);
@@ -376,13 +378,13 @@ getAd.post('', (req, res) => {
     else query = query.doc('home');
 
     query.get().then(doc => {
-            if (!doc.exists) {
-                res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
-            } else {
-                res.status(HttpStatus.OK).send({success: true, data: doc.data()});
-            }
-            return;
-        })
+        if (!doc.exists) {
+            res.status(HttpStatus.BAD_REQUEST).send(FAIL.INVALID_INPUTS);
+        } else {
+            res.status(HttpStatus.OK).send({success: true, data: doc.data()});
+        }
+        return;
+    })
         .catch(err => {
             console.log(err);
             res.status(HttpStatus.INTERNAL_SERVER_ERROR).send(FAIL.INTERNAL_ERROR);

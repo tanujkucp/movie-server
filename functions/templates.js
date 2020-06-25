@@ -16,19 +16,20 @@ let getMediaTemplate = function (parameters, extras) {
             case 'description':
             case 'youtube_trailer_video_id':
             case 'poster_link':
-                    template[key] = (parameters[key]).trim();
+            case 'username':
+                template[key] = (parameters[key]).trim();
                 break;
 
             case 'tags':
             case 'screenshots':
             case 'downloads':
-
+            case 'created_at':
                 template[key] = parameters[key];
                 break;
         }
     }
 
-    if (extras !== null) {
+    if (extras !== null && !template.hasOwnProperty('username')) {
         //the user who uploaded this media
         template.username = extras.username;
     }

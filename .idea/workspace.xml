@@ -22,6 +22,7 @@
     <list default="true" id="f289fc9c-2187-4b14-b90d-ee590ec178aa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/templates.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/templates.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +56,7 @@
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
   </component>
-  <component name="RunManager" selected="npm.serve">
+  <component name="RunManager" selected="npm.deploy">
     <configuration name="deploy" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/functions/package.json" />
       <command value="run" />
@@ -78,8 +79,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="npm.serve" />
         <item itemvalue="npm.deploy" />
+        <item itemvalue="npm.serve" />
       </list>
     </recent_temporary>
   </component>
@@ -106,7 +107,10 @@
       <workItem from="1589973986027" duration="14000" />
       <workItem from="1589981377911" duration="1824000" />
       <workItem from="1589983391009" duration="602000" />
-      <workItem from="1592541208022" duration="12978000" />
+      <workItem from="1592541208022" duration="13025000" />
+      <workItem from="1592574250974" duration="1308000" />
+      <workItem from="1593064408050" duration="4355000" />
+      <workItem from="1593078317641" duration="666000" />
     </task>
     <task id="LOCAL-00001" summary="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion">
       <created>1589011223495</created>
@@ -178,7 +182,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592549523963</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="- updated the getAd function to return Ad even if its disabled">
+      <created>1592565675139</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1592565675139</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -207,37 +218,38 @@
     <MESSAGE value="- Added support for Adult section, adult videos dont show in any other section." />
     <MESSAGE value="- backup json is now stringified before sending" />
     <MESSAGE value="- Added saveAd function to services to save the banner ads in database&#10;- Added a new getAd function to fetch ads for page" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Added saveAd function to services to save the banner ads in database&#10;- Added a new getAd function to fetch ads for page" />
+    <MESSAGE value="- updated the getAd function to return Ad even if its disabled" />
+    <option name="LAST_COMMIT_MESSAGE" value="- updated the getAd function to return Ad even if its disabled" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1592549523188">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1592565675018">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1592549523188" />
-    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1592565607294">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1592565675018" />
+    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1593077978236">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1592565607294" />
-    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1592565607290">
+    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1593077978236" />
+    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1593077978233">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1592565607290" />
-    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1592565607289">
+    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1593077978233" />
+    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1593077977922">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1592565607289" />
-    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1592565607291">
+    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1593077977922" />
+    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1593077978235">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1592565607291" />
+    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1593077978235" />
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor" timestamp="1589005726044">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor/58.27.1308.741@58.27.1308.741" timestamp="1589005726044" />
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1592550703638">
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2" timestamp="1592565681164">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1592550703638" />
+    <state x="307" y="133" width="800" height="535" key="Vcs.Push.Dialog.v2/58.27.1308.741@58.27.1308.741" timestamp="1592565681164" />
     <state x="158" y="127" width="1108" height="541" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1592550615162">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
