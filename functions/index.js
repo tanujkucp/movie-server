@@ -407,14 +407,14 @@ getLatest.post('', (req, res) => {
     if (filters) {
         //  console.log(filters);
         if (filters.industry) query = query.where('industry', '==', filters.industry);
-        else query = query.where('industry', 'in', [Enums.Industry.BOLLYWOOD, Enums.Industry.HOLLYWOOD, Enums.Industry.OTHER]);
+        else query = query.where('industry', 'in', [Enums.Industry.BOLLYWOOD, Enums.Industry.HOLLYWOOD,Enums.Industry.SOUTH, Enums.Industry.OTHER]);
 
         if (filters.media_type) query = query.where('media_type', '==', filters.media_type);
 
         query = query.orderBy('created_at', 'desc');
 
         if (filters.timestamp) query = query.startAfter(new Timestamp(filters.timestamp._seconds, filters.timestamp._nanoseconds));
-    } else query = query.where('industry', 'in', [Enums.Industry.BOLLYWOOD, Enums.Industry.HOLLYWOOD, Enums.Industry.OTHER]).orderBy('created_at', 'desc');
+    } else query = query.where('industry', 'in', [Enums.Industry.BOLLYWOOD, Enums.Industry.HOLLYWOOD,Enums.Industry.SOUTH, Enums.Industry.OTHER]).orderBy('created_at', 'desc');
 
     query.select('title', 'genre', 'poster_link', 'tags', 'created_at', 'username').limit(9).get()
         .then(snapshot => {
@@ -479,6 +479,7 @@ exports.onTitleCreated = functions.region('asia-northeast1').firestore.document(
     entry.title = doc.title;
     entry.poster_link = doc.poster_link;
     entry.tags = doc.tags;
+    entry.genre = doc.genre;
     entry.media_id = context.params.media_id;
 
     // Add an 'objectID' field which Algolia requires

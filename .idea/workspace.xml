@@ -21,8 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f289fc9c-2187-4b14-b90d-ee590ec178aa" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/functions/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/enums.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/functions/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/functions/templates.js" beforeDir="false" afterPath="$PROJECT_DIR$/functions/templates.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +110,10 @@
       <workItem from="1592541208022" duration="13025000" />
       <workItem from="1592574250974" duration="1308000" />
       <workItem from="1593064408050" duration="4355000" />
-      <workItem from="1593078317641" duration="666000" />
+      <workItem from="1593078317641" duration="1050000" />
+      <workItem from="1593431362917" duration="43000" />
+      <workItem from="1593848078071" duration="413000" />
+      <workItem from="1595048717589" duration="1141000" />
     </task>
     <task id="LOCAL-00001" summary="Made GetLatest and GetMedia separate functions to keep pressure low on them and moved backupDatabase to services Fucntion">
       <created>1589011223495</created>
@@ -189,7 +192,14 @@
       <option name="project" value="LOCAL" />
       <updated>1592565675139</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="- updated the saveMedia API to support database backup feature">
+      <created>1593082432808</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1593082432808</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -219,29 +229,30 @@
     <MESSAGE value="- backup json is now stringified before sending" />
     <MESSAGE value="- Added saveAd function to services to save the banner ads in database&#10;- Added a new getAd function to fetch ads for page" />
     <MESSAGE value="- updated the getAd function to return Ad even if its disabled" />
-    <option name="LAST_COMMIT_MESSAGE" value="- updated the getAd function to return Ad even if its disabled" />
+    <MESSAGE value="- updated the saveMedia API to support database backup feature" />
+    <option name="LAST_COMMIT_MESSAGE" value="- updated the saveMedia API to support database backup feature" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1592565675018">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2" timestamp="1593082432690">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1592565675018" />
-    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1593077978236">
+    <state x="251" y="27" width="912" height="741" key="CommitChangelistDialog2/58.27.1308.741@58.27.1308.741" timestamp="1593082432690" />
+    <state width="834" height="581" key="GridCell.Tab.0.bottom" timestamp="1595049418623">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1593077978236" />
-    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1593077978233">
+    <state width="834" height="581" key="GridCell.Tab.0.bottom/58.27.1308.741@58.27.1308.741" timestamp="1595049418623" />
+    <state width="834" height="581" key="GridCell.Tab.0.center" timestamp="1595049418620">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1593077978233" />
-    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1593077977922">
+    <state width="834" height="581" key="GridCell.Tab.0.center/58.27.1308.741@58.27.1308.741" timestamp="1595049418620" />
+    <state width="834" height="581" key="GridCell.Tab.0.left" timestamp="1595049418618">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1593077977922" />
-    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1593077978235">
+    <state width="834" height="581" key="GridCell.Tab.0.left/58.27.1308.741@58.27.1308.741" timestamp="1595049418618" />
+    <state width="834" height="581" key="GridCell.Tab.0.right" timestamp="1595049418622">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
-    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1593077978235" />
+    <state width="834" height="581" key="GridCell.Tab.0.right/58.27.1308.741@58.27.1308.741" timestamp="1595049418622" />
     <state x="201" y="31" width="1022" height="737" key="SettingsEditor" timestamp="1589005726044">
       <screen x="58" y="27" width="1308" height="741" />
     </state>
