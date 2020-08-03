@@ -235,7 +235,9 @@ app.post('/updateMedia', (req, res) => {
                 return;
             }
             // add timestamp to template
-            //  template['created_at'] = FieldValue.serverTimestamp();
+            //if we dont update the timestamp with new valur here, then the previous value becomes normal json object
+            // and that object is not sorted in sequence ,so only option is to update this timestamp
+              template['created_at'] = FieldValue.serverTimestamp();
 
             db.collection('uploads').doc(media_id).update(template).then(() => {
                 console.log('Updated document with ID: ' + media_id);
